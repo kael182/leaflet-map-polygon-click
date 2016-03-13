@@ -1,170 +1,20 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<title>Borders Color Calc</title>
-	<meta charset="utf-8" />
-
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-	<!-- Load Leaflet from CDN-->
-  		<link rel="stylesheet" href="http://cdn.jsdelivr.net/leaflet/0.7.3/leaflet.css" />
-
-
-	<style>
-		#map {
-			width: 800px;
-			height: 500px;
-		}
-		.info {
-			padding: 6px 8px;
-			font: 14px/16px Arial, Helvetica, sans-serif;
-			background: white;
-			background: rgba(255,255,255,0.8);
-			box-shadow: 0 0 15px rgba(0,0,0,0.2);
-			border-radius: 5px;
-		}
-		.info h4 {
-			margin: 0 0 5px;
-			color: #777;
-		}
-		.legend {
-			text-align: left;
-			line-height: 18px;
-			color: #555;
-		}
-		.legend i {
-			width: 18px;
-			height: 18px;
-			float: left;
-			margin-right: 8px;
-			opacity: 0.7;
-		}
-	</style>
-</head>
-<body>
-	<div id="map"></div>
-
-	<!-- Load Leaflet -->
-		<script src="http://cdn.jsdelivr.net/leaflet/0.7.3/leaflet.js"></script>
-
-
-	<script type="text/javascript" src="ct-towns-popchg.js"></script>
-	<script type="text/javascript">
-		var map = L.map('map').setView([41.5, -72.67], 9);
-		// customize source link to your GitHub repo
-		map.attributionControl
-		.setPrefix('View <a href="http://github.com/jackdougherty/leaflet-choropleth">open-source code on GitHub</a>, created with <a href="http://leafletjs.com" title="A JS library for interactive maps">Leaflet</a>');
-		new L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
-	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
-	}).addTo(map);
-
-	/* add polygons with popups
-	var geojson = L.geoJson(statesData, {
-    			onEachFeature: function(feature, featureLayer) {
-        		featureLayer.bindPopup(feature.properties.name)
-			}
-	}).addTo(map);
-	*/
-
-	/* add polygons with click on alerts
-	var geojson = L.geoJson(statesData, {
-    			onEachFeature: function(feature, featureLayer) {
-        		featureLayer.on('click', function() { console.log('Clicked on ' + feature.properties.name); });
-			 }
-	}).addTo(map);
-	*/
-
-/* working click to set new polygon color
-function style(feature) {
-    return {
-        fillColor: 'red',
-        weight: 2,
-        opacity: 1,
-        color: 'white',
-        dashArray: '3',
-        fillOpacity: 0.7
-    };
-}
-
-function colorFeature(e) {
-    var layer = e.target;
-
-    layer.setStyle({
-        fillColor: 'blue',
-        fillOpacity: 0.7
-     });
-}
-
-function onEachFeature(feature, layer) {
-    layer.on({
-        click: colorFeature
-    });
-}
-
-geojson = L.geoJson(statesData, {
-    style: style,
-    onEachFeature: onEachFeature
-}).addTo(map);
-*/
-
-var geojson;
-
-function style(feature) {
-    return {
-        fillColor: 'red',
-        weight: 2,
-        opacity: 1,
-        color: 'white',
-        dashArray: '3',
-        fillOpacity: 0.7
-    };
-}
-
-function highlightFeature(e) {
-    var layer = e.target;
-    info.update(layer.feature.properties);
-}
-
-function colorFeature(e) {
-    var layer = e.target;
-
-    layer.setStyle({
-        fillColor: 'blue',
-        fillOpacity: 0.7
-     });
-}
-
-function onEachFeature(feature, layer) {
-    layer.on({
-    	mouseover: highlightFeature,
-        click: colorFeature
-    });
-}
-
-geojson = L.geoJson(dataCtTowns, {
-    style: style,
-    onEachFeature: onEachFeature
-}).addTo(map);
-
-var info = L.control();
-
-info.onAdd = function (map) {
-    this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
-    this.update();
-    return this._div;
-};
-
-// method that we will use to update the control based on feature properties passed
-info.update = function (props) {
-    this._div.innerHTML = '<h4>CT Population 2010</h4>' +  (props ?
-        '<b>' + props.Town + '</b><br />' + props.Pop2010
-        : 'Hover over a state');
-};
-
-info.addTo(map);
-
-
-
-	</script>
-</body>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Leaflet polygon map</title>
+    <!-- Current Leaflet is beta. Check for updates at http://leafletjs.com/download.html -->
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v1.0.0-beta.2/leaflet.css" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- div to display map; add more for title and caption if desired -->
+    <div id="map"></div>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!-- Current Leaflet is beta. Check for updates at http://leafletjs.com/download.html -->
+    <script type="text/javascript" src="http://cdn.leafletjs.com/leaflet/v1.0.0-beta.2/leaflet.js"></script>
+    <!-- Upload the CT towns data file and javascript, in this order -->
+    <script type="text/javascript" src="ct-towns-density.js"></script>
+		<script type="text/javascript" src="ct-script.js"></script>
+  </body>
 </html>

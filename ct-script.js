@@ -1,8 +1,8 @@
-var map = L.map('map').setView([37.8, -96], 4);
+var map = L.map('map').setView([41.5, -72.7], 9);
 
 // customize source link to your GitHub repo
 map.attributionControl
-.setPrefix('View <a href="http://github.com/jackdougherty/leaflet-choropleth">open-source code on GitHub</a>, created with <a href="http://leafletjs.com" title="A JS library for interactive maps">Leaflet</a>');
+.setPrefix('View <a href="http://github.com/jackdougherty/leaflet-map-polygon">open-source code on GitHub</a>, created with <a href="http://leafletjs.com" title="A JS library for interactive maps">Leaflet</a>');
 
 new L.tileLayer('http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png', {
 attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
@@ -18,24 +18,23 @@ info.onAdd = function (map) {
   return this._div;
 };
 
+/* match data to column header */
 info.update = function (props) {
-  this._div.innerHTML = '<h4>US Population Density</h4>' +  (props ?
-    '<b>' + props.name + '</b><br />' + props.density + ' people / mi<sup>2</sup>'
-    : 'Hover over a state');
+  this._div.innerHTML = '<h4>Connecticut Town<br />Population density 2010</h4>' +  (props ?
+    '<b>' + props.town + '</b><br />' + props.density2010 + ' people / mi<sup>2</sup>'
+    : 'Hover over a town');
 };
-
 info.addTo(map);
-
 
 // get color depending on population density value
 function getColor(d) {
-  return d > 1000 ? '#800026' :
-         d > 500  ? '#BD0026' :
-         d > 200  ? '#E31A1C' :
-         d > 100  ? '#FC4E2A' :
-         d > 50   ? '#FD8D3C' :
-         d > 20   ? '#FEB24C' :
-         d > 10   ? '#FED976' :
+  return d > 5000 ? '#800026' :
+         d > 1000 ? '#BD0026' :
+         d > 500  ? '#E31A1C' :
+         d > 200  ? '#FC4E2A' :
+         d > 100  ? '#FD8D3C' :
+         d > 50   ? '#FEB24C' :
+         d > 30   ? '#FED976' :
                     '#FFEDA0';
 }
 
@@ -46,7 +45,7 @@ function style(feature) {
     color: 'white',
     dashArray: '3',
     fillOpacity: 0.7,
-    fillColor: getColor(feature.properties.density)
+    fillColor: getColor(feature.properties.density2010) /* match to data column header */
   };
 }
 
@@ -91,7 +90,7 @@ geojson = L.geoJson(data, {
   onEachFeature: onEachFeature
 }).addTo(map);
 
-map.attributionControl.addAttribution('Population data &copy; <a href="http://census.gov/">US Census Bureau</a>');
+map.attributionControl.addAttribution('Population data &copy; <a href="http://census.gov/">US Census</a>');
 
 
 var legend = L.control({position: 'bottomright'});
@@ -99,7 +98,7 @@ var legend = L.control({position: 'bottomright'});
 legend.onAdd = function (map) {
 
   var div = L.DomUtil.create('div', 'info legend'),
-    grades = [0, 10, 20, 50, 100, 200, 500, 1000],
+    grades = [0, 30, 50, 100, 200, 500, 1000, 5000],
     labels = [],
     from, to;
 
