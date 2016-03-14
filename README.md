@@ -8,13 +8,12 @@ Leaflet thematic polygon (choropleth) map, with clickable pop-up windows
 
 See chapter tutorials in http://DataVizForAll.org
 
-####General overview of steps below
+###General overview of steps below
 - Join a GeoJSON polygon map with spreadsheet data
 - Modify color ranges and info box display as needed
 - Upload all files to a forked or new GitHub repository, create GitHub pages branch for live web host
 
-####Detailed steps:
-**TO DO** FIX UP
+###Detailed steps:
 
 - Start with GeoJSON polygon map with no numerical data, such as: ct-towns-simple.geojson
 - Import polygon map into http://MapShaper.org. Simplify to reduce size as needed.
@@ -27,23 +26,12 @@ See chapter tutorials in http://DataVizForAll.org
   ```
   -join ct-towns.csv keys=town,town
   ```
-- Export the newly joined map with a new filename in GeoJSON format: ct-towns-density.json)
-- Change the file name suffix from .json to .js, so it becomes ct-towns-density.js
-- Open this .js file with a text editor, such as Atom http://atom.io
-- Inside the .js file, add text to start and end to declare a variable, data, to be equal to the contents of the file.
-  - add this to the start:
-  ```
-  var data =
-  ```
-  - the contents of the file remain the same
-  - insert a semicolon ( ; ) at the end of the file
-
+- Export the newly joined map with a new filename in GeoJSON format (with this suffix): ct-towns-density.geojson)
 - Fork this GitHub repository, or create your own, with these files (or equivalent):
   - index.html
   - script.js
   - style.css
-  - ct-towns-density.js  (the data file)
+  - ct-towns-density.geojson  (the data file)
 
-- in index.html, adjust the reference to the data file
-- in script.js, adjust the hover info box text and references as needed
-- in script.js, Adjust the ranges with http://colorbrewer.org
+- in index.html, fix any reference to the data file
+- in script.js, adjust references, range, and colors as noted in code comments
