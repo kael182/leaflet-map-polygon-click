@@ -2,41 +2,13 @@ var map = L.map('map').setView([41.5, -72.7], 9);
 
 // customize source link to your GitHub repo
 map.attributionControl
-.setPrefix('View <a href="http://github.com/jackdougherty/leaflet-map-polygon">open-source code on GitHub</a>, created with <a href="http://leafletjs.com" title="A JS library for interactive maps">Leaflet</a>');
+.setPrefix('View <a href="http://github.com/jackdougherty/leaflet-map-polygon-click">open-source code on GitHub</a>, created with <a href="http://leafletjs.com" title="A JS library for interactive maps">Leaflet</a>');
+
+map.attributionControl.addAttribution('Population data &copy; <a href="http://census.gov/">US Census</a>');
 
 new L.tileLayer('http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png', {
 attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
 }).addTo(map);
-
-
-// control that shows state info on hover
-var info = L.control();
-
-info.onAdd = function (map) {
-  this._div = L.DomUtil.create('div', 'info');
-  this.update();
-  return this._div;
-};
-
-/* match data to column header */
-info.update = function (props) {
-  this._div.innerHTML = '<h4>Connecticut Town<br />Population density 2010</h4>' +  (props ?
-    '<b>' + props.town + '</b><br />' + props.density2010 + ' people / mi<sup>2</sup>'
-    : 'Hover over a town');
-};
-info.addTo(map);
-
-// get color depending on population density value
-function getColor(d) {
-  return d > 5000 ? '#800026' :
-         d > 1000 ? '#BD0026' :
-         d > 500  ? '#E31A1C' :
-         d > 200  ? '#FC4E2A' :
-         d > 100  ? '#FD8D3C' :
-         d > 50   ? '#FEB24C' :
-         d > 30   ? '#FED976' :
-                    '#FFEDA0';
-}
 
 function style(feature) {
   return {
@@ -49,54 +21,38 @@ function style(feature) {
   };
 }
 
-function highlightFeature(e) {
-  var layer = e.target;
-
-  layer.setStyle({
-    weight: 5,
-    color: '#666',
-    dashArray: '',
-    fillOpacity: 0.7
-  });
-
-  if (!L.Browser.ie && !L.Browser.opera) {
-    layer.bringToFront();
-  }
-
-  info.update(layer.feature.properties);
+// set range and colors
+function getColor(d) {
+  return d > 5000 ? '#800026' :
+         d > 1000 ? '#BD0026' :
+         d > 500  ? '#E31A1C' :
+         d > 200  ? '#FC4E2A' :
+         d > 100  ? '#FD8D3C' :
+         d > 50   ? '#FEB24C' :
+         d > 30   ? '#FED976' :
+                    '#FFEDA0';
 }
 
-var geojson;
-
-function resetHighlight(e) {
-  geojson.resetStyle(e.target);
-  info.update();
-}
-
-function zoomToFeature(e) {
-  map.fitBounds(e.target.getBounds());
-}
-
+// replace column headers to match data file
 function onEachFeature(feature, layer) {
-  layer.on({
-    mouseover: highlightFeature,
-    mouseout: resetHighlight,
-    click: zoomToFeature
-  });
+  var popupText = "<b>" + feature.properties.town + "</b>"
+     + "<br>Pop Density 2010: " + "<br>" + feature.properties.density2010;
+  layer.bindPopup(popupText);
 }
 
-geojson = L.geoJson(data, {
-  style: style,
-  onEachFeature: onEachFeature
-}).addTo(map);
-
-map.attributionControl.addAttribution('Population data &copy; <a href="http://census.gov/">US Census</a>');
-
+// insert data file to be uploaded below
+$.getJSON("ct-towns-density.geojson", function (data) {
+  var geoJsonLayer = L.geoJson(data, {
+    style: style,
+    onEachFeature: onEachFeature
+  }).addTo(map);  // insert ".addTo(map)" to display layer by default
+});
 
 var legend = L.control({position: 'bottomright'});
 
 legend.onAdd = function (map) {
 
+// set grades to match ranges above
   var div = L.DomUtil.create('div', 'info legend'),
     grades = [0, 30, 50, 100, 200, 500, 1000, 5000],
     labels = [],
@@ -116,37 +72,3 @@ legend.onAdd = function (map) {
 };
 
 legend.addTo(map);
-
-
-
-
-
-// load polygon geojson, using data to define fillColor, from local directory
-// *TO DO* rebuild file for pop density
-// *TO DO* change from click to hover, and add legend to display colors and hover data
-// $.getJSON("us-states.geojson", function (data) {   // insert pathname to your local directory file
-//   var geoJsonLayer = L.geoJson(data, {
-//     style: function (feature) {
-//       var fillColor,
-//         population = feature.properties.Pop2010;
-//       if (population > 100000) fillColor = "#006837";
-//       else if (population > 50000) fillColor ="#31a354";
-//       else if (population > 15000) fillColor ="#78c679";
-//       else if (population > 5000) fillColor ="#c2e699";
-//       else if (population > 0) fillColor ="#ffffcc";
-//       else fillColor = "#f7f7f7"; // no data
-//       return {
-//         'color': 'red',
-//         'weight': 2,
-//         'fillColor': fillColor, // sorts by method above
-//         'fillOpacity': 0.8
-//       }
-//     },
-//     onEachFeature: function( feature, layer) {
-//       var popupText = "<b>" + feature.properties.Town + "</b>"   // replace labels with those from your own geojson
-//          + "<br>Population 2010: " + "<br>" + feature.properties.Pop2010;
-//       layer.bindPopup(popupText);
-//     }
-//   });  // insert ".addTo(map)" to display layer by default
-//   controlLayers.addOverlay(geoJsonLayer, 'Polygons filled (CT Pop 2010)');  // insert your 'Title' to add to legend
-// });

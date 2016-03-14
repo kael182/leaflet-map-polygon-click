@@ -1,19 +1,20 @@
-# leaflet-map-polygon
-Leaflet thematic polygon (choropleth) map, with US and Connecticut examples
+# leaflet-map-polygon-click
+Leaflet thematic polygon (choropleth) map, with clickable pop-up windows
 
-## demos
-- US example http://jackdougherty.github.io/leaflet-map-polygon/ct.html
-- CT example http://jackdougherty.github.io/leaflet-map-polygon/us.html
+## Demo
+- http://jackdougherty.github.io/leaflet-map-polygon-click/index.html
 
-## credits
-- Leaflet choropleth tutorial: http://leafletjs.com/examples/choropleth.html
-- Connecticut Mirror: http://ctmirror.org
+## Create your own
 
-## how to create your own
+See chapter tutorials in http://DataVizForAll.org
 
-Strategy 1: See detailed tutorial steps in http://DataVizForAll.org
+####General overview of steps below
+- Join a GeoJSON polygon map with spreadsheet data
+- Modify color ranges and info box display as needed
+- Upload all files to a forked or new GitHub repository, create GitHub pages branch for live web host
 
-**TO DO** simplify file names to index.html, data.js, etc.
+####Detailed steps:
+**TO DO** FIX UP
 
 - Start with GeoJSON polygon map with no numerical data, such as: ct-towns-simple.geojson
 - Import polygon map into http://MapShaper.org. Simplify to reduce size as needed.
@@ -38,19 +39,11 @@ Strategy 1: See detailed tutorial steps in http://DataVizForAll.org
   - insert a semicolon ( ; ) at the end of the file
 
 - Fork this GitHub repository, or create your own, with these files (or equivalent):
-  - index.html (similar to ct.html)
-  - data.js (similar to ct-towns-density.js)
-  - script.js (similar to ct-script.js)
+  - index.html
+  - script.js
   - style.css
+  - ct-towns-density.js  (the data file)
 
-- Adjust the hover info as needed
-- Adjust the ranges with http://colorbrewer.org
-
-Strategy 2:
-- rewrite script to pull data directly from GeoJSON file, OR
-
-
-Strategy 3:
-
-- see CT Mirror workflow to keep map-borders.js separate; how to link data.js?
-- rewrite functions to display borders directly from GeoJSON file, and pull data from CSV
+- in index.html, adjust the reference to the data file
+- in script.js, adjust the hover info box text and references as needed
+- in script.js, Adjust the ranges with http://colorbrewer.org
