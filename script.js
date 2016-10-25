@@ -1,7 +1,7 @@
 // Edit the center point and zoom level
 var map = L.map('map', {
-  center: [41.5, -72.7],
-  zoom: 9,
+  center: [41.767068, -72.716280],
+  zoom: 13,
   scrollWheelZoom: false
 });
 
@@ -15,66 +15,65 @@ new L.tileLayer('http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png
 attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
 }).addTo(map);
 
-// Edit the getColor feature.properties to match column header in the GeoJson map data
-function style(feature) {
-  return {
-    weight: 2,
-    opacity: 1,
-    color: 'white',
-    dashArray: '3',
-    fillOpacity: 0.7,
-    fillColor: getColor(feature.properties.density2010)
-  };
-}
+// Get your own free Mapzen search API key and see geocoder options at https://github.com/mapzen/leaflet-geocoder
+L.control.geocoder('search-jBPBt5y').addTo(map);
 
-// Edit ranges and colors; see http://colorbrewer.org
-function getColor(d) {
-  return d > 5000 ? '#800026' :
-         d > 1000 ? '#BD0026' :
-         d > 500  ? '#E31A1C' :
-         d > 200  ? '#FC4E2A' :
-         d > 100  ? '#FD8D3C' :
-         d > 50   ? '#FEB24C' :
-         d > 30   ? '#FED976' :
-                    '#FFEDA0';
-}
+L.control.scale().addTo(map);
 
-// Edit labels and properties to match column headers in GeoJSON map data
-function onEachFeature(feature, layer) {
-  var popupText = "<b>" + feature.properties.town + "</b>"
-     + "<br>Pop Density 2010: " + "<br>" + feature.properties.density2010;
-  layer.bindPopup(popupText);
-}
+// place a default blue marker on map
+// L.marker([41.767068, -72.716280]).addTo(map);
 
 // Edit file name of the GeoJson map data to be uploaded from your local directory
-$.getJSON("ct-towns-density.geojson", function (data) {
+$.getJSON("opp-index-2014.geojson", function (data) {
   var geoJsonLayer = L.geoJson(data, {
-    style: style,
-    onEachFeature: onEachFeature
+    style: function (feature) {
+      var fillColor,
+        level = feature.properties.level2014;
+      if (level == "Very Low") fillColor = "#fff5cc";
+      else if (level == "Low") fillColor = "#ffdb94";
+      else if (level == "Moderate") fillColor = "#ffb84d";
+      else if (level == "High") fillColor = "#ff9933";
+      else if (level == "Very High") fillColor = "#ff7519";
+      else fillColor = "gray"; // no data
+      return {
+        'color': 'gray',
+        'weight': 2,
+        'opacity': 1,
+        'dashArray': 3,
+        'fillColor': fillColor,
+        'fillOpacity': 0.8
+      }
+    },
+    onEachFeature: function( feature, layer) {
+      var popupText = "Town: <b>" + feature.properties.town + "</b>" + "<br>Tract: <b>" + feature.properties.tract2010 + "</b>"
+         + "<br>Opportunity Level: <b>" + feature.properties.level2014 + "</b>";
+      layer.bindPopup(popupText);
+    }
   }).addTo(map);
 });
 
-var legend = L.control({position: 'bottomright'});
-
-legend.onAdd = function (map) {
-
-// Edit grades to match ranges inserted above
-  var div = L.DomUtil.create('div', 'info legend'),
-    grades = [0, 30, 50, 100, 200, 500, 1000, 5000],
-    labels = [],
-    from, to;
-
-  for (var i = 0; i < grades.length; i++) {
-    from = grades[i];
-    to = grades[i + 1];
-
-    labels.push(
-      '<i style="background:' + getColor(from + 1) + '"></i> ' +
-      from + (to ? '&ndash;' + to : '+'));
-  }
-
-  div.innerHTML = labels.join('<br>');
-  return div;
-};
-
-legend.addTo(map);
+//
+// var legend = L.control({position: 'bottomright'});
+//
+// legend.onAdd = function (map) {
+//
+// // Edit grades to match ranges inserted above
+//   var div = L.DomUtil.create('div', 'info legend'),
+//     grades = ['Very Low', 'Low', 'Moderate', 'High', 'Very High'],
+//     labels = [],
+//     from, to;
+//
+//   for (var i = 0; i < grades.length; i++) {
+//     from = grades[i];
+//     to = grades[i + 1];
+//
+//     labels.push(
+//       '<i style="background:' + fillColor(from + 1) + '"></i> ' +
+//       from + (to ? '&ndash;' + to : '+'));
+//   }
+//
+//   div.innerHTML = labels.join('<br>');
+//   return div;
+// };
+//
+// legend.addTo(map);
