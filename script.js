@@ -36,7 +36,7 @@ $.getJSON("opp-index-2014.geojson", function (data) {
       else if (level == "Very High") fillColor = "#ff7519";
       else fillColor = "gray"; // no data
       return {
-        'color': 'gray',
+        'color': 'blue',
         'weight': 2,
         'opacity': 1,
         'dashArray': 3,
