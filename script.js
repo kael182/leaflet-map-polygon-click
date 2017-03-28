@@ -7,7 +7,7 @@ var map = L.map('map', {
 
 // Edit links to your GitHub repo and data source credit
 map.attributionControl
-.setPrefix('View <a href="http://github.com/jackdougherty/leaflet-map-polygon-click">open-source code on GitHub</a>, created with <a href="http://leafletjs.com" title="A JS library for interactive maps">Leaflet</a>');
+.setPrefix('View <a href="https://kael182.github.io/leaflet-map-polygon-click/">open-source code on GitHub</a>, created with <a href="http://leafletjs.com" title="A JS library for interactive maps">Leaflet</a>');
 map.attributionControl.addAttribution('Population data &copy; <a href="http://census.gov/">US Census</a>');
 
 // Basemap layer
@@ -45,7 +45,7 @@ $.getJSON("opp-index-2014.geojson", function (data) {
       }
     },
     onEachFeature: function( feature, layer) {
-      var popupText = "Town: <b>" + feature.properties.town + "</b>" + "<br>Tract: <b>" + feature.properties.tract2010 + "</b>"
+      var popupText = "state_name: <b>" + feature.properties.state_name + "</b>" + "<br>Tract: <b>" + feature.properties.tract2010 + "</b>"
          + "<br>Opportunity Level: <b>" + feature.properties.level2014 + "</b>";
       layer.bindPopup(popupText);
     }
